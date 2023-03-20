@@ -1,3 +1,5 @@
+import re
+
 EMOJIS = {
     ":0m:": "<:0m:1084530142543609967>",
     ":1m:": "<:1m:1084530149757829202>",
@@ -37,3 +39,22 @@ EMOJIS = {
     ":6z:": "<:6z:1084530197732265984>",
     ":7z:": "<:7z:1084531163516907551>"
 }
+
+def short_to_long(text):
+    new = ""
+    for key in EMOJIS.keys():
+        new = text.replace(key, EMOJIS[key])
+
+    return new
+
+def text_to_short(text):
+    new = ""
+    matches = re.findall("(\d+[a-z])", text.lower())
+
+    for group in matches:
+        suit = group[-1]
+        for tile in re.findall("\d", group):
+            new += f":{tile}{suit}:"
+
+    return new
+

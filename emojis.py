@@ -41,11 +41,10 @@ EMOJIS = {
 }
 
 def short_to_long(text):
-    new = ""
     for key in EMOJIS.keys():
-        new = text.replace(key, EMOJIS[key])
+        text = text.replace(key, EMOJIS[key])
 
-    return new
+    return text
 
 def text_to_short(text):
     new = ""

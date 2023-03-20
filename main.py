@@ -1,6 +1,7 @@
 import os
 
 import discord
+import logging
 from discord import app_commands
 from dotenv import load_dotenv
 
@@ -52,25 +53,26 @@ async def on_raw_reaction_add(payload):
 
             for phrase in phraselist:
                 if queried_message.content.lower().find(phrase) >= 0:
-                    text = dba.connect()['info'].find_one(phrase=phrase)['simple']
-
-                    for key in emojis.EMOJIS.keys():
-                        text = text.replace(key, emojis.EMOJIS[key])
+                    text = emojis.short_to_long(dba.connect()['info'].find_one(phrase=phrase)['simple'])
 
                     embed.add_field(name=phrase, value=text, inline=False)
                     phrasecount += 1
+                    logging.debug(f"Queried '{phrase}'")
 
             embed.title = f"Found {phrasecount}..."
 
             if phrasecount == 0:
                 embed.description = "**No phrases to iterate on found.**\n" \
                                "If you believe there is a phrase to be added, please contact `Leah#0004`."
+                logging.warning("User requested iteration without found phrases!\n" + queried_message.content.lower())
 
             await current_channel.send(embed=embed, reference=queried_message, mention_author=False)
 
     if payload.emoji.name == '❌':
         current_channel = client.get_channel(payload.channel_id)
         queried_message = await current_channel.fetch_message(payload.message_id)
+
+        logging.debug(f"Deleted {payload.message_id}")
 
         if queried_message.author.id == client.application_id:
             await queried_message.delete()

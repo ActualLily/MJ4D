@@ -25,7 +25,7 @@ print(f"Launching RM4D {STAGE} {VERSION}...")
 
 def base_embed() -> discord.Embed:
     embed = discord.Embed(color=0xeca333)
-    embed.set_footer(text="To delete this message, react with `❌`!")
+    embed.set_footer(text="To delete this message, react with ❌. To query a post, react with ❓.")
     embed.set_author(name=client.user.name,
                      icon_url=client.user.display_avatar.url)
 
@@ -33,7 +33,7 @@ def base_embed() -> discord.Embed:
 
 @client.event
 async def on_ready():
-    await tree.sync(guild=discord.Object(id=GUILD_TEST))
+    await tree.sync()
 
     print(f"RM4D {STAGE} {VERSION} synced and running!")
 
